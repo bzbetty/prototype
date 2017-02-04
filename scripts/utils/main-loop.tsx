@@ -1,9 +1,4 @@
-
-import React from 'react';
-import ReactDOM from 'react-dom';
-
-
-export default class MainLoop extends React.Component {
+export default class GameLoop  {
     limit : number = 300;
     lastFrameTimeMs : number  = 0;
     maxFPS : number  = 60;
@@ -16,46 +11,35 @@ export default class MainLoop extends React.Component {
     started : boolean  = false;
     frameID : number  = 0;
     runTime : number  = 0;
+    subscribers: Array<Object> = [];
 
     update(delta) {
-        React.Children.map(this.props.children, i => i.update(delta));    
+        this.subscribers.forEach(i => i.update(delta));    
     }
 
     draw(interp) {    
-        React.Children.map(this.props.children, i => i.draw(interp));
-        //fpsDisplay.textContent = `${Math.round(fps)} FPS (${cursorX}, ${cursorY})`
+        this.subscribers.forEach(i => i.draw(interp));        
     }
 
-    componentDidMount()
-    {
-        this.start();
-    }
-        
     begin(timestamp, delta) {
         //calculate the FPS
-        if (timestamp > this.lastFpsUpdate + 1000) {
-            this.fps = 0.25 * this.framesThisSecond + 0.75 * this.fps;
+        // if (timestamp > this.lastFpsUpdate + 1000) {
+        //     this.fps = 0.25 * this.framesThisSecond + 0.75 * this.fps;
 
-            this.lastFpsUpdate = timestamp;
-            this.framesThisSecond = 0;
+        //     this.lastFpsUpdate = timestamp;
+        //     this.framesThisSecond = 0;
 
-            //runTime++
-            // if(runTime % 10 == 0)
-            // {
-            //     objects.push(new createBox('box2', 200));
-            // }
-        }
-        this.framesThisSecond++;
+        //     //runTime++
+        //     // if(runTime % 10 == 0)
+        //     // {
+        //     //     objects.push(new createBox('box2', 200));
+        //     // }
+        // }
+        // this.framesThisSecond++;
     }
 
     end(fps) {
 
-    }
-
-    stop() {
-        this.running = false;
-        this.started = false;
-        cancelAnimationFrame(this.frameID);
     }
 
     start() {
@@ -65,17 +49,23 @@ export default class MainLoop extends React.Component {
                 this.draw(1);
                 this.running = true;
                 this.lastFrameTimeMs = timestamp;
-                this.lastFpsUpdate = timestamp;
-                this.framesThisSecond = 0;
-                this.frameID = requestAnimationFrame(this.mainLoop);
+                // this.lastFpsUpdate = timestamp;
+                // this.framesThisSecond = 0;                
+                this.frameID = requestAnimationFrame(this.mainLoop.bind(this));
             });
         }
+    }
+
+    stop() {
+        this.running = false;
+        this.started = false;
+        cancelAnimationFrame(this.frameID);
     }
 
     mainLoop(timestamp) {
         // Throttle the frame rate.    
         if (timestamp < this.lastFrameTimeMs + this.timestep) {
-            this.frameID = requestAnimationFrame(this.mainLoop);
+            this.frameID = requestAnimationFrame(this.mainLoop.bind(this));
             return;
         }
         this.delta += timestamp - this.lastFrameTimeMs;
@@ -100,27 +90,19 @@ export default class MainLoop extends React.Component {
         this.end(this.fps);
 
         //schedule next update
-        this.frameID = requestAnimationFrame(this.mainLoop);
+        this.frameID = requestAnimationFrame(this.mainLoop.bind(this));
+    }
+
+    subscribe(callback) {
+        return this.subscribers.push(callback);
+    }
+
+    unsubscribe(id) {
+        delete this.subscribers[id - 1];
     }
 
     panic() {
 
     }
 
-    render() {
-        return (
-            <div>
-                {this.props.children}
-                <span>{this.fps}</span>
-            </div>
-        );
-    }
 }
-
-
-// var cursorX, cursorY;
-// document.onmousemove = function(e){
-//     cursorX = e.pageX;
-//     cursorY = e.pageY;
-// }
-

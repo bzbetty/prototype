@@ -2,14 +2,14 @@ import "babel-polyfill";
 import React from 'react';
 import { render } from 'react-dom';
 
-import MainLoop from './MainLoop.tsx';
-import Box from './box.tsx';
+import Game from './components/Game.tsx';
+import Box from './components/Box.tsx';
 
 
 render(
-  <MainLoop>
+  <Game>
     <Box />
-  </MainLoop>,
+  </Game>,
   document.getElementById('root')
 );
 
