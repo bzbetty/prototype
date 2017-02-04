@@ -2,8 +2,7 @@ import React, { Component, PropTypes } from 'react';
 
 export default class Box extends React.Component {
     static contextTypes = {
-        loop: PropTypes.object,
-        scale: PropTypes.number,
+        loop: PropTypes.object
     };
 
     loopId: number = null;
@@ -19,9 +18,13 @@ export default class Box extends React.Component {
     }
 
     componentWillUnmount() {
-        if (loopId) {
+        if (this.loopId) {
             this.context.loop.unsubscribe(this.loopId);
         }
+    }
+
+    begin() {
+        
     }
 
     update(delta) {
@@ -53,7 +56,9 @@ export default class Box extends React.Component {
 
     render() {
         return (
-            <div style={{ position: 'absolute', left: this.x, top: this.y, width: 50, height: 50, backgroundColor: 'green' }} />
+            <div style={{ position: 'absolute', left: this.x, top: this.y, width: 50, height: 50, backgroundColor: 'green' }}>
+                {this.props.children}
+            </div>
         );
     }
 }
