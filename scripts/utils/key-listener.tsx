@@ -1,25 +1,17 @@
 export default class KeyListener {
-
-    LEFT = 37;
-    RIGHT = 39;
-    UP = 38;
-    DOWN = 40;
-    SPACE = 32;
-
     keys: { [id: number]: boolean } = {};
 
     down = (event) => {
-
-        //if (event.keyCode in this.keys) {
+        if (event.keyCode >= 32 && event.keyCode <= 111) {
             event.preventDefault();
             this.keys[event.keyCode] = true;
-        //}
+        }
     };
 
     up = (event) => {
         if (event.keyCode in this.keys) {
             event.preventDefault();
-            this.keys[event.keyCode] = false;
+            delete this.keys[event.keyCode];
         }
     };
 
