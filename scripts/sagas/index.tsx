@@ -1,5 +1,5 @@
 import { delay, takeEvery, takeLatest, eventChannel, END } from 'redux-saga'
-import { fork, take, call, put, select } from 'redux-saga/effects'
+import { race, fork, take, call, put, select } from 'redux-saga/effects'
 import throttler from 'throttled-event-listener'
 
 function input(secs) {
@@ -18,17 +18,44 @@ function input(secs) {
 
 function* userInput() {
   const chan = yield call(input);
-  try {
+  let recordingFrame : number = 0;
+  let recording : Object = {};
+ 
     while (true) {
       // take(END) will cause the saga to terminate by jumping to the finally block
-      let event = yield take(chan);
-      console.log(event);
-      //todo put event - filter recordable
+      let event = yield race({msg: take('GAMELOOP_TICK'), input:take(chan)});
+
+      if(event.msg)
+      {
+        recordingFrame = Math.round(event.msg.payload.timestamp / 5);
+      } else {
+        recording[recordingFrame] = event.input;
+      console.log(event.msg, event.input);
+        if(event.input.key == "1") //loop
+        {
+          yield fork(playback,recording)
+        }
+        
+      }
     }
-  } finally {
-    console.log('userInput terminated');
-  }
 }
+
+
+function* playback(recording : Object) {  
+  let recordingFrame : number = 0;
+    var t = Object.keys(recording);
+
+    yield takeLatest('GAMELOOP_TICK', function*() {
+    yield put({ type: 'n', payload: recording[t[recordingFrame++]] });
+        // if(timestamp > nextACtion)
+        // {
+        //   put(recordings[nextAction]);
+        //   nextAction++;
+        // }
+    }); 
+}
+
+
 
 async function animationFrame() {
   let resolve = null;
@@ -70,30 +97,6 @@ function* gameLoop() {
   }
 }
 
-// function* playback() {  
-//     yield takeLatest('GAMELOOP_UPDATE', function*() {
-//         if(timestamp > nextACtion)
-//         {
-//           put(recordings[nextAction]);
-//           nextAction++;
-//         }
-//     }); 
-// }
-
-
-// function* recorder() {
-//     yield takeEvery("*", function*(action){
-//         if(action.record == 1)
-//         {
-//           recordings[frame] = action;
-//         }
-
-//         if(action.type == 'loop')
-//         {
-//           fork(playback);
-//         }
-//     });
-// }
 
 export default function* rootSaga() {
   yield fork(gameLoop);
