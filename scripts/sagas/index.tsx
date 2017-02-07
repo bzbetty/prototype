@@ -1,13 +1,12 @@
 import { delay, takeEvery, takeLatest, eventChannel, END } from 'redux-saga'
 import { race, fork, take, call, put, select } from 'redux-saga/effects'
-import throttler from 'throttled-event-listener'
 
-function input(secs) {
+function inputChannel() {
   return eventChannel(emitter => {
-    throttler.add('keypress', 50, emitter);
-    throttler.add('mousemove', 50, function(event) { if(event.buttons) { emitter(event); }});
-    throttler.add('mousedown', 50, emitter);    
-    throttler.add('mouseup', 50, emitter);
+    window.addEventListener('keypress', emitter);
+    window.addEventListener('mousemove', function (event) { if (event.buttons) { emitter(event); } });
+    window.addEventListener('mousedown', emitter);
+    window.addEventListener('mouseup', emitter);
 
     return () => {
       //todo unsubscribe
@@ -16,43 +15,51 @@ function input(secs) {
   )
 }
 
-function* userInput() {
-  const chan = yield call(input);
-  let recordingFrame : number = 0;
-  let recording : Object = {};
- 
-    while (true) {
-      // take(END) will cause the saga to terminate by jumping to the finally block
-      let event = yield race({msg: take('GAMELOOP_TICK'), input:take(chan)});
+function* actionRecorder() {
+  const inputChan = yield call(inputChannel);
+  let timestamp: number = 0;
+  let recording: Array<Action> = [];
 
-      if(event.msg)
+  while (true) {    
+    let event = yield race({
+      input: take(inputChan),
+      msg: take('GAMELOOP_TICK')  
+    });
+
+    if (event.msg) {
+      timestamp = event.msg.payload.timestamp;
+    } else {
+      var action = { type: 'INPUT', timestamp: timestamp, payload: event.input };
+      recording.push(action); 
+      yield put(action);
+
+      if (event.input.key == "1") //loop
       {
-        recordingFrame = Math.round(event.msg.payload.timestamp / 5);
-      } else {
-        recording[recordingFrame] = event.input;
-      console.log(event.msg, event.input);
-        if(event.input.key == "1") //loop
-        {
-          yield fork(playback,recording)
-        }
-        
+        yield fork(playback, timestamp, recording)
       }
+
     }
+  }
 }
 
+interface Action {
+  type: string;
+  payload: Object;
+}
 
-function* playback(recording : Object) {  
-  let recordingFrame : number = 0;
-    var t = Object.keys(recording);
+function* playback(initialTimestamp: number, recording: Array<Action>) {
+  let index: number = 0;
+  let timestamp : number = 0;
 
-    yield takeLatest('GAMELOOP_TICK', function*() {
-    yield put({ type: 'n', payload: recording[t[recordingFrame++]] });
-        // if(timestamp > nextACtion)
-        // {
-        //   put(recordings[nextAction]);
-        //   nextAction++;
-        // }
-    }); 
+  var t = Object.keys(recording);
+
+  yield takeLatest('GAMELOOP_TICK', function* (tick : Action) {
+    timestamp = tick.payload.timestamp;
+    console.log(recording.length);2
+    while (index < recording.length && (timestamp - initialTimestamp) > recording[index].timestamp) {
+      yield put(recording[index++]);
+    }
+  });
 }
 
 
@@ -100,6 +107,6 @@ function* gameLoop() {
 
 export default function* rootSaga() {
   yield fork(gameLoop);
-  yield fork(userInput);  
+  yield fork(actionRecorder);
 };
 
