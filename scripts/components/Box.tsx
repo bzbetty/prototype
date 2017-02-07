@@ -3,13 +3,15 @@ import { connect } from 'react-redux';
 
 class Box extends React.Component {   
     render() {
+        var x =  this.props.x;
+        var y = this.props.y;
+
         return (
-            <div style={{ position: 'absolute', left: this.props.box.x, top: this.props.box.y, width: 50, height: 50, backgroundColor: 'green' }}>
+            <div style={{ position: 'absolute', left: x, top: y, width: 50, height: 50, backgroundColor: 'green' }}>
                 {this.props.children}
             </div>
         );
     }
 }
 
-
-export default connect(state => state)(Box);
+export default Box;

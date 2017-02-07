@@ -18,6 +18,7 @@ function inputChannel() {
 function* actionRecorder() {
   const inputChan = yield call(inputChannel);
   let timestamp: number = 0;
+  let loops: number = 0;
   let recording: Array<Action> = [];
 
   while (true) {    
@@ -29,13 +30,13 @@ function* actionRecorder() {
     if (event.msg) {
       timestamp = event.msg.payload.timestamp;
     } else {
-      var action = { type: 'INPUT', timestamp: timestamp, payload: event.input };
+      var action = { type: 'INPUT', timestamp: timestamp, payload: event.input, loop: 0 };
       recording.push(action); 
       yield put(action);
 
       if (event.input.key == "1") //loop
       {
-        yield fork(playback, timestamp, recording)
+        yield fork(playback, ++loops, timestamp, recording)
       }
 
     }
@@ -47,16 +48,17 @@ interface Action {
   payload: Object;
 }
 
-function* playback(initialTimestamp: number, recording: Array<Action>) {
+function* playback(loop: number, initialTimestamp: number, recording: Array<Action>) {
   let index: number = 0;
   let timestamp : number = 0;
 
   var t = Object.keys(recording);
-
+  
   yield takeLatest('GAMELOOP_TICK', function* (tick : Action) {
     timestamp = tick.payload.timestamp;  
     while (index < recording.length && (timestamp - initialTimestamp) > recording[index].timestamp) {
-      yield put(recording[index++]);
+      yield put({ ...recording[index], loop: recording[index].loop + loop});
+      index++;
     }
   });
 }
@@ -96,8 +98,6 @@ function* gameLoop() {
         }
         
       }
-console.log(delta);
-
     }
   }
 }
