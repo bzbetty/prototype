@@ -54,8 +54,7 @@ function* playback(initialTimestamp: number, recording: Array<Action>) {
   var t = Object.keys(recording);
 
   yield takeLatest('GAMELOOP_TICK', function* (tick : Action) {
-    timestamp = tick.payload.timestamp;
-    console.log(recording.length);2
+    timestamp = tick.payload.timestamp;  
     while (index < recording.length && (timestamp - initialTimestamp) > recording[index].timestamp) {
       yield put(recording[index++]);
     }
@@ -72,9 +71,9 @@ async function animationFrame() {
 }
 
 function* gameLoop() {
-  var lastFrameTimeMs: number = 0;
-  var delta: number = 0;
-  var timestep: number = 1000 / 60;
+  let lastFrameTimeMs: number = 0;
+  let delta: number = 0;
+  let timestep: number = 1000 / 60;
 
   while (1) {
     var timestamp = yield call(animationFrame);
@@ -89,17 +88,16 @@ function* gameLoop() {
       //perform updates
       var numUpdateSteps = 0;
       while (delta >= timestep) {
-        yield put({ type: 'GAMELOOP_UPDATE', payload: { timestamp: timestamp, delta: delta } });
-
+        yield put({ type: 'GAMELOOP_UPDATE', payload: { timestamp: timestamp, delta: delta, timestep: timestep } });
         delta -= timestep;
         if (++numUpdateSteps >= 240) {
           debugger;
           break;
         }
+        
       }
+console.log(delta);
 
-      //draw the update
-      //this.draw(this.delta / this.timestep);
     }
   }
 }
