@@ -6,7 +6,7 @@ export default function* spawner(recording) {
   let loops: number = 0;
   while (true) {
     var tick: Action = yield take('GAMELOOP_TICK');
-    yield fork(Playback, loops++, tick.payload.timestamp, recording)
-    yield delay(3000);
+    yield fork(Playback , loops++, tick.payload.timestamp, recording)
+    yield delay(10000);
   }
 }

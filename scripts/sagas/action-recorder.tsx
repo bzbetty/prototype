@@ -16,9 +16,8 @@ export default function* actionRecorder(recording : Array<Action>) {
 
     if (event.msg) {
       timestamp = event.msg.payload.timestamp;
-    } else {
-      var action = { type: 'INPUT', timestamp: timestamp, payload: event.input, loop: 0 };
-      recording.push(action);
+    } else {      
+      recording.push({ ...event.input, timestamp: timestamp });
     }
   }
 }

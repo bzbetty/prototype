@@ -13,7 +13,7 @@ export default function* playback(loop: number, initialTimestamp: number, record
     var tick: Action = yield take('GAMELOOP_TICK');
     timestamp = tick.payload.timestamp;
     while (index < recording.length && (timestamp - initialTimestamp) > recording[index].timestamp) {
-      yield put({ ...recording[index], loop: recording[index].loop + loop });
+      yield put({ ...recording[index], loop: loop });
       index++;
     } 
   };
