@@ -34,7 +34,7 @@ export default function boxReducer(state = [], action) {
             return newState;
 
         case 'SPAWN':
-            return [...state, { x: 0, y: state.length * 50, velocityX: 0, velocityY: 0 }];
+            return [...state, { x: 0, y: 0 }];
 
         case 'CLICK':
             var newState = [...state];
