@@ -14,13 +14,13 @@ export default function boxReducer(state = [], action) {
             }
             return newState;
           
-        case 'INPUT':
-            if(action.payload.key == '3')
-            {                
-                return [...state, { x: 0, y: state.length * 50, velocityX: 0.08 }];
-            }
-
-            if(action.payload.key == '2') {
+        case 'SPAWN':
+            // if(action.payload.key == '3')
+            // {                
+                 return [...state, { x: 0, y: state.length * 50, velocityX: 0.08 }];
+            // }
+ case 'INPUT':
+            if(action.payload.key == ' ') {
                 var newState = [...state];
                 let i = action.loop;
 
