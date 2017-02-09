@@ -34,11 +34,10 @@ export default function boxReducer(state = [], action) {
             return newState;
 
         case 'SPAWN':
-            return [...state, { x: 0, y: 0 }];
+            return [...state, action.payload];
 
         case 'CLICK':
             var newState = [...state];
-
             newState[action.loop].destX = action.payload.x;
             newState[action.loop].destY = action.payload.y;
 

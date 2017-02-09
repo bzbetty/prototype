@@ -23,7 +23,6 @@ export default function* gameLoop() {
         yield put({ type: 'GAMELOOP_UPDATE', payload: { timestamp: timestamp, delta: delta, timestep: timestep } });
         delta -= timestep;
         if (++numUpdateSteps >= 240) {
-          debugger;
           break;
         }
 

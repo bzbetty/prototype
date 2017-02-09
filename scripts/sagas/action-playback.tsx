@@ -7,7 +7,9 @@ export default function* playback(loop: number, initialTimestamp: number, record
   let index: number = 0;
   let timestamp: number = 0;
 
-  yield put({ type: 'SPAWN', payload: loop });
+  var defaults = yield take('PLAYER_DEFAULTS');
+  yield put({ type: 'SPAWN', payload: defaults.payload });
+  //yield take ('START');
 
   while (true) {
     var tick: Action = yield take('GAMELOOP_TICK');
