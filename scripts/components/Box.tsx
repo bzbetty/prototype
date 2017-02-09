@@ -25,6 +25,7 @@ class Box extends React.Component {
                         backgroundColor: `${backgroundColor}`
                         }}>
                 {this.props.children}
+                {this.props.health}
             </div>
         );
     }
