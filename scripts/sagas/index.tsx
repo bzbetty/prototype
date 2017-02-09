@@ -9,10 +9,10 @@ let recording: Array<Action> = [];
 
 
 function* game() {
-  yield delay(1000); // allow for other sagas to start
+  yield delay(200); // allow for other sagas to start
   yield put({ type: 'CLEAR'});
   yield put({ type: 'PLAYER_DEFAULTS', payload: { x: 200, y: 400, team: 0, spawn: 30, size: 40, health: 100}});
-  yield put({ type: 'SPAWN', payload: { x: 200, y: 200, size: 100, team: 1, health: 100}});
+  yield put({ type: 'SPAWN', name: 'mob', payload: { x: 200, y: 200, size: 100, team: 1, health: 100}});
   yield put({ type: 'DIALOG'});
   //yield take("DISMISS");
   yield put({ type: 'START' });
@@ -21,8 +21,7 @@ function* game() {
 
 
 
-export default function* rootSaga() {
-  
+export default function* rootSaga() {  
   yield fork(gameLoop);
   yield fork(recorder, recording);
   yield fork(spawner, recording);

@@ -1,11 +1,15 @@
-var framesThisSecond: Number = 0;
+function mapObject(object, callback) {
+    var idx = 0;
+    return Object.keys(object).map(function (key) {
+        return callback(object[key], idx++);
+    });
+}
 
-export default function boxReducer(state = [], action) {
+export default function boxReducer(state = {}, action) {
     switch (action.type) {
         case 'GAMELOOP_UPDATE':
-            var newState = [...state];
-            for (var i = 0; i < state.length; i++) {
-                var entity = state[i];
+            var newState = {...state};
+            mapObject(newState, (entity, idx) => {
                 if (entity.destX) {
                     var dX = entity.destX - entity.x;
                     var dY = entity.destY - entity.y;
@@ -14,7 +18,7 @@ export default function boxReducer(state = [], action) {
 
                     if (dC < 3) {
                         entity.destX = null;
-                        break;
+                        return;
                     }
                     //normalise
                     dX /= dC;
@@ -24,23 +28,25 @@ export default function boxReducer(state = [], action) {
                     var velocityX = dX * 0.2 * action.payload.timestep;
                     var velocityY = dY * 0.2 * action.payload.timestep;
 
-                    let x = Math.round(state[i].x + velocityX);
-                    let y = Math.round(state[i].y + velocityY);
+                    let x = Math.round(entity.x + velocityX);
+                    let y = Math.round(entity.y + velocityY);
 
                     entity.x = x;
                     entity.y = y;
                 }
-            }
+            });
+
             return newState;
 
         case 'SPAWN':
-            return [...state, action.payload];
+            var newState = {...state};
+            newState[action.name] = {...action.payload};
+            return newState;
 
         case 'CLICK':
-            var newState = [...state];
-            newState[action.loop].destX = action.payload.x;
-            newState[action.loop].destY = action.payload.y;
-
+            var newState = {...state};
+            newState[action.name].destX = action.payload.x;
+            newState[action.name].destY = action.payload.y;
             return newState;
     }
     return state;

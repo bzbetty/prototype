@@ -1,4 +1,4 @@
-var framesThisSecond : Number = 0;
+var framesThisSecond : number = 0;
 
 export default function fpsReducer(state = { fps: 60, lastFpsUpdate: 0 }, action) {
     switch(action.type) {        

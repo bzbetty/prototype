@@ -4,12 +4,19 @@ import { connect } from 'react-redux';
 import Box from './components/Box.tsx';
 import FPS from './components/FPS.tsx';
 
+function mapObject(object, callback) {
+  var idx = 0;
+  return Object.keys(object).map(function (key) {
+    return callback(object[key], idx++);
+  });
+}
+
 class Game extends React.Component {   
     render() {
         return (
             <div>
                 <FPS />
-                {this.props.box.map((box, idx) => <Box key={idx} {...box} />)}                
+                { mapObject(this.props.box, (box, idx) => <Box key={idx} {...box} />)}                
             </div>
         );
     }
