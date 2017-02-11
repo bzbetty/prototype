@@ -31,3 +31,27 @@ export default function* moveTowardsTarget(entityName, entity) {
     }
 }
 
+//behaviour
+
+//pick a target (agro / distance?)
+//hit target - ability?
+
+//cooldown
+//global cooldown
+
+
+
+
+
+//abilities?
+
+// projectile
+// damageAoE, moveTowardsTarget, selectTarget, die --would that reselect?
+
+//heal
+// healAoe, die
+
+//heal HOT
+// repeat?, healAoe, die
+
+//spawn(heal, x, y);

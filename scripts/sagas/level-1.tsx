@@ -28,6 +28,25 @@ function* behaviours() {
 }
 
 
+//level ideas
+//hit until dead
+//heal self
+//taunt
+//require heal empty space
+//fire - require move boss
+//drag through fire
+//spawn mobs
+//spawner different locations
+//spawner has health?
+//spawner is a behavior?
+//projectile
+//get over here
+//ranged mob
+//silence/interrupts
+//switch main
+//delay input
+
+
 export default function* level1() {
   let recording: Array<Action> = [];
   let playerDefaults = {
@@ -49,5 +68,8 @@ export default function* level1() {
 
   //spawn mobs
   yield put({ type: 'SPAWN', name: 'mob', payload: { x: 200, y: 200, size: 100, team: 1, health: 100 } });
+
+
+  //take('WIN'); // wait for win condition?
 }
 
