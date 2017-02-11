@@ -3,13 +3,7 @@ import { connect } from 'react-redux';
 
 import Box from './components/Box.tsx';
 import FPS from './components/FPS.tsx';
-
-function mapObject(object, callback) {
-  var idx = 0;
-  return Object.keys(object).map(function (key) {
-    return callback(object[key], idx++);
-  });
-}
+import mapObject from './utils/map-object.tsx';
 
 class Game extends React.Component {   
     render() {
