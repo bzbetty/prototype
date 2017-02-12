@@ -5,8 +5,7 @@ export default function* moveTowardsTarget(entityName, entity) {
     let timestep: number = 1000 / 60; //todo get from somewhere
     var target = entity.target;
 
-    if(typeof(target) == 'string')
-    {
+    if (typeof (target) == 'string') {
         var entities = yield select(s => s.entities);
         target = entities[target];
     }
@@ -17,23 +16,26 @@ export default function* moveTowardsTarget(entityName, entity) {
 
         var dC = Math.round(Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2)));
 
-        if (dC < (entity.radius + target.radius + 10) || dC < 3) {
-            return;
+        var update = {};
+        update.rotation = (Math.atan2(dY, dX) * 180 / Math.PI) + 90;
+
+        if (!(dC < (entity.radius + target.radius + 10) || dC < 3)) {
+
+            //normalise
+            dX /= dC;
+            dY /= dC;
+
+            //proportion of max velocity
+            var velocityX = dX * 0.2 * timestep * (20 / entity.radius);
+            var velocityY = dY * 0.2 * timestep * (20 / entity.radius);
+
+            update.x = Math.round(entity.x + velocityX);
+            update.y = Math.round(entity.y + velocityY);
+
         }
 
-        //normalise
-        dX /= dC;
-        dY /= dC;
+        yield put({ type: 'ENTITY_UPDATE', name: entityName, payload: update });
 
-        //proportion of max velocity
-        var velocityX = dX * 0.2 * timestep * (20 / entity.radius);
-        var velocityY = dY * 0.2 * timestep * (20 / entity.radius);
-
-        let x = Math.round(entity.x + velocityX);
-        let y = Math.round(entity.y + velocityY);
-        let rotation = (Math.atan2(dY, dX) * 180 / Math.PI) + 90;
-
-        yield put({ type: 'ENTITY_UPDATE', name: entityName, payload: { x: x, y: y, rotation: rotation } });
     }
 }
 
