@@ -21,8 +21,10 @@ export default function* collisionDetection(chan) {
           var dX = target.x - entity.x;
           var dY = target.y - entity.y;
 
-          var dC = Math.round(Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2)));
-          if (dC < (entity.size /2+ target.size /2)) {
+          var dC = Math.pow(dX, 2) + Math.pow(dY, 2);
+            var sumR = Math.pow(entity.radius + target.radius, 2);
+
+          if (dC < sumR) {
             console.log('col', keys[i], keys[j]);             
           }
 

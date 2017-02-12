@@ -7,18 +7,19 @@ class Entity extends React.Component {
     render() {
         var x = this.props.x;
         var y = this.props.y;
-        var size = this.props.size;
+        var radius = this.props.radius;
         var rotation = this.props.rotation;
 
         var colors = ['green', 'red'];
         var color = colors[this.props.team || 0];
         var backgroundColor = Color(color).lighten(0.8);
+        var size = radius * 2;
 
         return (
             <div style={{
                 position: 'absolute',
-                left: x - (size / 2),
-                top: y - (size / 2),
+                left: x - radius,
+                top: y - radius,
                 width: size,
                 height: size,
             }}>
@@ -45,7 +46,7 @@ class Entity extends React.Component {
                     </div>
 
                 </div>
-                <HealthBar {...this.props} />
+                <HealthBar {...this.props} size={size} />
             </div>
 
         );

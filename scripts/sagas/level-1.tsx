@@ -41,7 +41,7 @@ export default function* level1() {
     y: 400,
     team: 0,
     spawn: 30,
-    size: 40,
+    radius: 20,
     health: 100,
     behaviours: [
       moveTowardsTarget
@@ -63,7 +63,7 @@ export default function* level1() {
     payload: {
       x: 200,
       y: 200,
-      size: 100,
+      radius: 50,
       team: 1,
       health: 100,
       behaviours: [

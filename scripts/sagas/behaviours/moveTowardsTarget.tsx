@@ -17,9 +17,7 @@ export default function* moveTowardsTarget(entityName, entity) {
 
         var dC = Math.round(Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2)));
 
-        if (dC < 3) {
-            //todo agro list?
-          //  yield put({ type: 'ENTITY_UPDATE', name: entity.name, payload: { target: null } });
+        if (dC < (entity.radius + target.radius + 10) || dC < 3) {
             return;
         }
 
@@ -28,8 +26,8 @@ export default function* moveTowardsTarget(entityName, entity) {
         dY /= dC;
 
         //proportion of max velocity
-        var velocityX = dX * 0.2 * timestep * (40 / entity.size);
-        var velocityY = dY * 0.2 * timestep * (40 / entity.size);
+        var velocityX = dX * 0.2 * timestep * (20 / entity.radius);
+        var velocityY = dY * 0.2 * timestep * (20 / entity.radius);
 
         let x = Math.round(entity.x + velocityX);
         let y = Math.round(entity.y + velocityY);
