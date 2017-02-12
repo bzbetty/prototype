@@ -7,6 +7,7 @@ import Action from '../utils/action.tsx'
 import gameLoop from './game-loop.tsx';
 import recorder from './action-recorder.tsx';
 import spawner from './spawner.tsx';
+import behaviours from './behaviours.tsx';
 
 import moveTowardsTarget from './behaviours/moveTowardsTarget.tsx';
 
@@ -28,31 +29,6 @@ import moveTowardsTarget from './behaviours/moveTowardsTarget.tsx';
 //silence/interrupts
 //switch main
 //delay input
-
-//seems to slow down when split out for each entity
-function* behaviours(chan) {
-  while (true) {
-
-    var action = yield take(chan, 'GAMELOOP_UPDATE');
-    
-    var store = yield select();
-
-    var entities = store.entities;
-
-    if(entities) {
-    for (var e in Object.keys(entities)) {
-        let entity = entities[e];
-        if (entity && entity.behaviours) {
-          for (var b = 0; b < entity.behaviours.length; b++) {          
-            yield fork(entity.behaviours[b], e, entity);
-          }
-        }
-      }
-    }
-
- 
-  }
-}
 
 
 export default function* level1() {
