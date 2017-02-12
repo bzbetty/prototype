@@ -1,7 +1,7 @@
 import { delay, takeEvery, takeLatest, eventChannel, END } from 'redux-saga'
 import { race, fork, take, call, put, select } from 'redux-saga/effects'
 
-export default function* moveTowardsTarget(entityName, entity) {
+export default function* moveTowardsTarget(entityName, entity, delta) {
     let timestep: number = 1000 / 60; //todo get from somewhere
     var target = entity.target;
 
@@ -26,8 +26,8 @@ export default function* moveTowardsTarget(entityName, entity) {
             dY /= dC;
 
             //proportion of max velocity
-            var velocityX = dX * 0.2 * timestep * (20 / entity.radius);
-            var velocityY = dY * 0.2 * timestep * (20 / entity.radius);
+            var velocityX = dX * 0.2 * delta * (20 / entity.radius); 
+            var velocityY = dY * 0.2 * delta * (20 / entity.radius);
 
             update.x = Math.round(entity.x + velocityX);
             update.y = Math.round(entity.y + velocityY);
