@@ -1,8 +1,8 @@
-import { delay, takeEvery, takeLatest, eventChannel, END } from 'redux-saga';
+import { delay, takeEvery, takeLatest, eventChannel, END, channel } from 'redux-saga';
 import { race, fork, take, call, put, select } from 'redux-saga/effects';
 import animationFrame from '../utils/animation-frame.tsx';
 
-export default function* gameLoop() {
+export default function* gameLoop(chan) {
   let lastFrameTimeMs: number = 0;
   let delta: number = 0;
   let timestep: number = 1000 / 60;
@@ -15,12 +15,12 @@ export default function* gameLoop() {
       delta += timestamp - lastFrameTimeMs;
       lastFrameTimeMs = timestamp;
 
-      yield put({ type: 'GAMELOOP_TICK', payload: { timestamp: timestamp, delta: delta } });
+      yield put(chan, { type: 'GAMELOOP_TICK', payload: { timestamp: timestamp, delta: delta } });
 
       //perform updates
       var numUpdateSteps = 0;
       while (delta >= timestep) {
-        yield put({ type: 'GAMELOOP_UPDATE', payload: { timestamp: timestamp, delta: delta, timestep: timestep } });
+        yield put(chan, { type: 'GAMELOOP_UPDATE', payload: { timestamp: timestamp, delta: delta, timestep: timestep } });
         delta -= timestep;
         if (++numUpdateSteps >= 240) {
           break;

@@ -1,4 +1,4 @@
-import { delay, takeEvery, takeLatest, eventChannel, END } from 'redux-saga'
+import { delay, takeEvery, takeLatest, eventChannel, END, channel, buffers } from 'redux-saga'
 import { race, fork, take, call, put, select } from 'redux-saga/effects'
 
 import mapObject from '../utils/map-object.tsx';
@@ -9,23 +9,6 @@ import recorder from './action-recorder.tsx';
 import spawner from './spawner.tsx';
 
 import moveTowardsTarget from './behaviours/moveTowardsTarget.tsx';
-
-function* behaviours() {
-  yield takeLatest('GAMELOOP_UPDATE', function* (action) {
-    var entities = yield select(s => s.box);
-
-    for (var e in Object.keys(entities)) {
-      let entity = entities[e];
-      if (entity && entity.behaviours) {
-        for (var b = 0; b < entity.behaviours.length; b++) {
-          yield fork(entity.behaviours[b], b, entity);
-          //next?
-          //todo break out
-        }
-      }
-    }
-  });
-}
 
 
 //level ideas
@@ -47,8 +30,40 @@ function* behaviours() {
 //delay input
 
 
+function* behaviours(chan) {
+  //yield delay(2000);
+  
+  while (true) {
+
+    var action = yield take(chan, 'GAMELOOP_UPDATE');
+    
+    var store = yield select();
+
+    var entities = store.box;
+
+    if(entities) {
+    for (var e in Object.keys(entities)) {
+        let entity = entities[e];
+        if (entity && entity.behaviours) {
+          for (var b = 0; b < entity.behaviours.length; b++) {          
+            yield fork(entity.behaviours[b], e, entity);
+            
+         //   yield *entity.behaviours[b](b, entity);
+            //next?
+            //todo break out
+          }
+        }
+      }
+    }
+
+ 
+  }
+}
+
+
 export default function* level1() {
   let recording: Array<Action> = [];
+
   let playerDefaults = {
     x: 200,
     y: 400,
@@ -61,14 +76,15 @@ export default function* level1() {
     ]
   };
 
-  yield fork(gameLoop);
-  yield fork(recorder, recording);
-  yield fork(spawner, playerDefaults, recording);
-  yield fork(behaviours);
+  let chan = yield call(channel, buffers.sliding());
+
+  yield fork(gameLoop, chan);
+  yield fork(recorder, chan, recording);
+  yield fork(spawner, chan, playerDefaults, recording);
+  yield fork(behaviours, chan);
 
   //spawn mobs
   yield put({ type: 'SPAWN', name: 'mob', payload: { x: 200, y: 200, size: 100, team: 1, health: 100 } });
-
 
   //take('WIN'); // wait for win condition?
 }

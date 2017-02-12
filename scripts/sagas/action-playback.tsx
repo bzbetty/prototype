@@ -3,12 +3,12 @@ import { race, fork, take, call, put, select } from 'redux-saga/effects'
 import Action from '../utils/action.tsx'
 
 
-export default function* playback(loop: number, initialTimestamp: number, recording: Array<Action>) {
+export default function* playback(chan, loop: number, initialTimestamp: number, recording: Array<Action>) {
   let index: number = 0;
   let timestamp: number = 0;
 
   while (true) {
-    var tick: Action = yield take('GAMELOOP_TICK');
+    var tick: Action = yield take(chan, 'GAMELOOP_TICK');
     timestamp = tick.payload.timestamp;
     while (index < recording.length && (timestamp - initialTimestamp) > recording[index].timestamp) {
       yield put({ ...recording[index], name: loop });
