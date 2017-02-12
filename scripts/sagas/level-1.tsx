@@ -48,13 +48,12 @@ export default function* level1() {
     ]
   };
 
-  let chan = yield call(channel, buffers.sliding());
+  //let chan = yield call(channel, buffers.sliding());
 
-  yield fork(gameLoop, chan);
-  yield fork(recorder, chan, recording);
-  yield fork(spawner, chan, playerDefaults, recording);
-  yield fork(behaviours, chan);
-  yield fork(collisionDetection, chan);
+  yield fork(recorder, gameLoop, recording);
+  yield fork(spawner, gameLoop, playerDefaults, recording);
+  yield fork(behaviours, gameLoop);
+  yield fork(collisionDetection, gameLoop);
 
   //spawn mobs
   yield put({

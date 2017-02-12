@@ -3,13 +3,12 @@ import { race, fork, take, call, put, select } from 'redux-saga/effects'
 
 
 //seems to slow down when split out for each entity
-export default function* behaviours(chan) {
-  var timestamp = 0;
+export default function* behaviours(gameLoop) {
+  let chan = yield call(gameLoop);
+
   while (true) {
 
     var action = yield take(chan, 'GAMELOOP_UPDATE');
-    let delta = timestamp == 0 ? action.payload.timestep : action.payload.timestamp - timestamp;
-    timestamp = action.payload.timestamp;
 
     var entities = yield select(s => s.entities);
     if (entities) {
@@ -17,7 +16,7 @@ export default function* behaviours(chan) {
         let entity = entities[e];
         if (entity && entity.behaviours) {
           for (var b = 0; b < entity.behaviours.length; b++) {
-            yield fork(entity.behaviours[b], e, entity, delta);
+            yield fork(entity.behaviours[b], e, entity, action.payload.timestep);
           }
         }
       }

@@ -1,8 +1,8 @@
 import { delay, takeEvery, takeLatest, eventChannel, END, channel, buffers } from 'redux-saga'
 import { race, fork, take, call, put, select } from 'redux-saga/effects'
 
-export default function* collisionDetection(chan) {
-//  return;
+export default function* collisionDetection(gameLoop) {
+  let chan = yield call(gameLoop);  
   while (true) {
 
     var action = yield take(chan, 'GAMELOOP_UPDATE');
@@ -31,7 +31,7 @@ export default function* collisionDetection(chan) {
             var sumR = Math.pow(entity.radius + target.radius, 2);
 
             if (dC < sumR) {
-             // console.log('col', keys[i], keys[j]);
+              console.log('col', keys[i], keys[j]);
             }
           }
 

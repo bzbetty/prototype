@@ -3,9 +3,9 @@ import { race, fork, take, call, put, select } from 'redux-saga/effects'
 import playback from './action-playback.tsx';
 import Action from '../utils/action.tsx'
 
-export default function* spawner(chan, playerDefaults: Object, recording: Array<Action>) {
+export default function* spawner(gameLoop, playerDefaults: Object, recording: Array<Action>) {
   let loops: number = 0;
-
+  let chan = yield call(gameLoop);
   //todo spawner props - x, y, currentCooldown, currentCooldown
   //todo draw on map?
 
@@ -13,7 +13,7 @@ export default function* spawner(chan, playerDefaults: Object, recording: Array<
     var tick: Action = yield take(chan, 'GAMELOOP_TICK');
     yield put({ type: 'SPAWN', payload: playerDefaults, name: loops });
 
-    yield fork(playback, chan, loops++, tick.payload.timestamp, recording)
+    yield fork(playback, gameLoop, loops++, tick.payload.timestamp, recording)
     
     yield delay(10000);
   }
