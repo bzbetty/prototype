@@ -8,7 +8,9 @@ import gameLoop from './game-loop.tsx';
 import recorder from './action-recorder.tsx';
 import spawner from './spawner.tsx';
 import behaviours from './behaviours.tsx';
+import collisionDetection from './collisionDetection.tsx';
 
+import pickATarget from './behaviours/pickATarget.tsx';
 import moveTowardsTarget from './behaviours/moveTowardsTarget.tsx';
 
 
@@ -52,9 +54,24 @@ export default function* level1() {
   yield fork(recorder, chan, recording);
   yield fork(spawner, chan, playerDefaults, recording);
   yield fork(behaviours, chan);
+  yield fork(collisionDetection, chan);
 
   //spawn mobs
-  yield put({ type: 'SPAWN', name: 'mob', payload: { x: 200, y: 200, size: 100, team: 1, health: 100 } });
+  yield put({
+    type: 'SPAWN',
+    name: 'mob',
+    payload: {
+      x: 200,
+      y: 200,
+      size: 100,
+      team: 1,
+      health: 100,
+      behaviours: [
+        pickATarget,
+        moveTowardsTarget
+      ]
+    }
+  });
 
   //take('WIN'); // wait for win condition?
 }

@@ -4,11 +4,18 @@ import { race, fork, take, call, put, select } from 'redux-saga/effects'
 export default function* moveTowardsTarget(entityName, entity) {
     let timestep: number = 1000 / 60; //todo get from somewhere
     var target = entity.target;
-    if (target) {
+
+    if(typeof(target) == 'string')
+    {
+        var entities = yield select(s => s.entities);
+        target = entities[target];
+    }
+
+    if (target && target.x) {
         var dX = target.x - entity.x;
         var dY = target.y - entity.y;
 
-        var dC = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
+        var dC = Math.round(Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2)));
 
         if (dC < 3) {
             //todo agro list?
@@ -21,8 +28,8 @@ export default function* moveTowardsTarget(entityName, entity) {
         dY /= dC;
 
         //proportion of max velocity
-        var velocityX = dX * 0.2 * timestep;
-        var velocityY = dY * 0.2 * timestep;
+        var velocityX = dX * 0.2 * timestep * (40 / entity.size);
+        var velocityY = dY * 0.2 * timestep * (40 / entity.size);
 
         let x = Math.round(entity.x + velocityX);
         let y = Math.round(entity.y + velocityY);
