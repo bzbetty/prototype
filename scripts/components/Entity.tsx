@@ -34,10 +34,10 @@ class Entity extends React.Component {
                 }}>
                     {this.props.children}
                   
-                    <div class="radius" style={{
+                    <div style={{
                             position: 'absolute',
                             left: '50%',
-                            top: '50%',
+                            top: 0,
                             height: '50%',
                             width: 2,
                             backgroundColor: `${color}`,

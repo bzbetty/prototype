@@ -33,8 +33,9 @@ export default function* moveTowardsTarget(entityName, entity) {
 
         let x = Math.round(entity.x + velocityX);
         let y = Math.round(entity.y + velocityY);
+        let rotation = (Math.atan2(dY, dX) * 180 / Math.PI) + 90;
 
-        yield put({ type: 'ENTITY_UPDATE', name: entityName, payload: { x: x, y: y } });
+        yield put({ type: 'ENTITY_UPDATE', name: entityName, payload: { x: x, y: y, rotation: rotation } });
     }
 }
 
