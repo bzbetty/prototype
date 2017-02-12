@@ -29,17 +29,15 @@ import moveTowardsTarget from './behaviours/moveTowardsTarget.tsx';
 //switch main
 //delay input
 
-
+//seems to slow down when split out for each entity
 function* behaviours(chan) {
-  //yield delay(2000);
-  
   while (true) {
 
     var action = yield take(chan, 'GAMELOOP_UPDATE');
     
     var store = yield select();
 
-    var entities = store.box;
+    var entities = store.entities;
 
     if(entities) {
     for (var e in Object.keys(entities)) {
@@ -47,10 +45,6 @@ function* behaviours(chan) {
         if (entity && entity.behaviours) {
           for (var b = 0; b < entity.behaviours.length; b++) {          
             yield fork(entity.behaviours[b], e, entity);
-            
-         //   yield *entity.behaviours[b](b, entity);
-            //next?
-            //todo break out
           }
         }
       }

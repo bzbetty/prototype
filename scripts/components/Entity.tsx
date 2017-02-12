@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Color from 'color';
 
-class Box extends React.Component {   
+class Entity extends React.Component {   
     render() {
         var x =  this.props.x;
         var y = this.props.y;
@@ -31,4 +31,4 @@ class Box extends React.Component {
     }
 }
 
-export default Box;
+export default Entity;

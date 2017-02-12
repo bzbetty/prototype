@@ -1,6 +1,6 @@
 
 
-export default function boxReducer(state = {}, action) {
+export default function entitiesReducer(state = {}, action) {
     switch (action.type) {
         case 'ENTITY_UPDATE':
             var newState = {...state};

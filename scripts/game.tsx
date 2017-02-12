@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import Box from './components/Box.tsx';
+import Entity from './components/Entity.tsx';
 import FPS from './components/FPS.tsx';
 import mapObject from './utils/map-object.tsx';
 
@@ -10,7 +10,7 @@ class Game extends React.Component {
         return (
             <div>
                 <FPS />
-                { mapObject(this.props.box, (box, idx) => <Box key={idx} {...box} />)}                
+                { mapObject(this.props.entities, (entity, idx) => <Entity key={idx} {...entity} />)}                
             </div>
         );
     }
