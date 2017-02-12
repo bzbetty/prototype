@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Color from 'color';
+import HealthBar from './health-bar.tsx';
 
 class Entity extends React.Component {   
     render() {
@@ -25,7 +26,8 @@ class Entity extends React.Component {
                         backgroundColor: `${backgroundColor}`
                         }}>
                 {this.props.children}
-                {this.props.health}
+
+                  <HealthBar {...this.props} />
             </div>
         );
     }
