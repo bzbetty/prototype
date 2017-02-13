@@ -5,7 +5,7 @@ class FPS extends React.Component {
     render() {
         return (
             <div>
-                {Math.round(this.props.fps.fps)}
+                {Math.round(this.props.fps)}
             </div>
         );
     }
