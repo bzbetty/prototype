@@ -2,8 +2,9 @@ import { delay, takeEvery, takeLatest, eventChannel, END } from 'redux-saga'
 import { race, fork, take, call, put, select } from 'redux-saga/effects'
 import playback from './action-playback.tsx';
 import Action from '../utils/action.tsx'
+import gameLoop from './game-loop.tsx';
 
-export default function* spawner(gameLoop, playerDefaults: Object, recording: Array<Action>) {
+export default function* spawner(playerDefaults: Object, recording: Array<Action>) {
   let loops: number = 0;
   let chan = yield call(gameLoop);
   //todo spawner props - x, y, currentCooldown, currentCooldown
@@ -13,7 +14,7 @@ export default function* spawner(gameLoop, playerDefaults: Object, recording: Ar
     var tick: Action = yield take(chan, 'GAMELOOP_TICK');
     yield put({ type: 'SPAWN', payload: playerDefaults, name: loops });
 
-    yield fork(playback, gameLoop, loops++, tick.payload.timestamp, recording)
+    yield fork(playback, loops++, tick.payload.timestamp, recording)
     
     yield delay(10000);
   }

@@ -4,7 +4,6 @@ import { race, fork, take, call, put, select } from 'redux-saga/effects'
 import mapObject from '../utils/map-object.tsx';
 import Action from '../utils/action.tsx'
 
-import gameLoop from './game-loop.tsx';
 import recorder from './action-recorder.tsx';
 import spawner from './spawner.tsx';
 import behaviours from './behaviours.tsx';
@@ -48,12 +47,10 @@ export default function* level1() {
     ]
   };
 
-  //let chan = yield call(channel, buffers.sliding());
-
-  yield fork(recorder, gameLoop, recording);
-  yield fork(spawner, gameLoop, playerDefaults, recording);
-  yield fork(behaviours, gameLoop);
-  yield fork(collisionDetection, gameLoop);
+  yield fork(recorder, recording);
+  yield fork(spawner, playerDefaults, recording);
+  yield fork(behaviours);
+  yield fork(collisionDetection);
 
   //spawn mobs
   yield put({

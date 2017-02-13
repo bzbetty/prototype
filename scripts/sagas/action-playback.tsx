@@ -1,9 +1,9 @@
 import { delay, takeEvery, takeLatest, eventChannel, END } from 'redux-saga'
 import { race, fork, take, call, put, select } from 'redux-saga/effects'
 import Action from '../utils/action.tsx'
+import gameLoop from './game-loop.tsx';
 
-
-export default function* playback(gameLoop, loop: number, initialTimestamp: number, recording: Array<Action>) {
+export default function* playback(loop: number, initialTimestamp: number, recording: Array<Action>) {
   let index: number = 0;
   let timestamp: number = 0;
   let chan = yield call(gameLoop);

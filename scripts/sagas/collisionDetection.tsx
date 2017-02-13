@@ -1,7 +1,8 @@
 import { delay, takeEvery, takeLatest, eventChannel, END, channel, buffers } from 'redux-saga'
 import { race, fork, take, call, put, select } from 'redux-saga/effects'
+import gameLoop from './game-loop.tsx';
 
-export default function* collisionDetection(gameLoop) {
+export default function* collisionDetection() {
   let chan = yield call(gameLoop);
   while (true) {
 
