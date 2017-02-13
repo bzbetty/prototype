@@ -5,9 +5,10 @@ export default function gameLoop() {
   let lastFrameTimeMs: number = 0;
   let delta: number = 0;
   let timestep: number = 1000 / 60;
+  let requestId: number = 0;
 
   return eventChannel(emitter => {
-    var fu = timestamp => {
+    var onAnimationFrame = timestamp => {
       // Throttle the frame rate.    
       if (timestamp >= lastFrameTimeMs + timestep) {
         delta += timestamp - lastFrameTimeMs;
@@ -25,12 +26,17 @@ export default function gameLoop() {
           }
         }
       }
-      window.requestAnimationFrame(fu);
+      requestId = window.requestAnimationFrame(onAnimationFrame);
     };
 
-    window.requestAnimationFrame(fu);
+    requestId = window.requestAnimationFrame(onAnimationFrame);
 
-    return () => { }; //unsubscribe
+    return () => {
+      if (requestId) {
+        window.cancelAnimationFrame(requestId);
+        requestId = undefined;
+      }
+    };
   });
 
 }
