@@ -7,6 +7,7 @@ import gameLoop from './game-loop.tsx';
 export default function* spawner(playerDefaults: Object, recording: Array<Action>) {
   let loops: number = 0;
   let chan = yield call(gameLoop);
+  var MAX_LOOPS = 10;
   //todo spawner props - x, y, currentCooldown, currentCooldown
   //todo draw on map?
 
@@ -15,6 +16,9 @@ export default function* spawner(playerDefaults: Object, recording: Array<Action
     yield put({ type: 'SPAWN', payload: playerDefaults, name: loops });
 
     yield fork(playback, loops++, tick.payload.timestamp, recording)
+
+    if(loops >= MAX_LOOPS)
+      return;
     
     yield delay(10000);
   }
