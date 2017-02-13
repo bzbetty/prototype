@@ -16,6 +16,15 @@ export default function entitiesReducer(state = {}, action) {
             var newState = {...state};
             newState[action.name].target = {...action.payload};
             return newState;
+
+        case 'COLLISIONS':
+            var newState = {...state};
+
+            for(var key in state) {
+                newState[key] = {...newState[key], collisions: action.payload[key] };
+            }
+
+            return newState;
     }
     return state;
 }

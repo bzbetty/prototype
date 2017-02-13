@@ -11,6 +11,7 @@ import collisionDetection from './collisionDetection.tsx';
 
 import pickATarget from './behaviours/pickATarget.tsx';
 import moveTowardsTarget from './behaviours/moveTowardsTarget.tsx';
+import hurtEnemiesInRange from './behaviours/hurtEnemiesInRange.tsx';
 
 
 //level ideas
@@ -43,7 +44,8 @@ export default function* level1() {
     radius: 20,
     health: 100,
     behaviours: [
-      moveTowardsTarget
+      moveTowardsTarget,
+      hurtEnemiesInRange
     ]
   };
 
@@ -64,7 +66,8 @@ export default function* level1() {
       health: 100,
       behaviours: [
         pickATarget,
-        moveTowardsTarget
+        moveTowardsTarget,
+        hurtEnemiesInRange
       ]
     }
   });

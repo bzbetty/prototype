@@ -5,43 +5,38 @@ import gameLoop from './game-loop.tsx';
 export default function* collisionDetection() {
   let chan = yield call(gameLoop);
   while (true) {
-
     var action = yield take(chan, 'GAMELOOP_UPDATE');
 
+    var distances = {};
     var entities = yield select(s => s.entities);
 
     if (entities) {
       var keys = Object.keys(entities);
 
-      for (var i = 0; i < keys.length - 1; i++) {
-        for (var j = i + 1; j < keys.length; j++) {
+      for (var entityIndex = 0; entityIndex < keys.length - 1; entityIndex++) {
+        for (var targetIndex = entityIndex + 1; targetIndex < keys.length; targetIndex++) {
 
-          var entity = entities[keys[i]];
-          var target = entities[keys[j]];
+          var entityKey = keys[entityIndex];
+          var targetKey = keys[targetIndex];
+
+          var entity = entities[entityKey];
+          var target = entities[targetKey];
 
           var sumR = entity.radius + target.radius;
-          if (entity.x + sumR > target.x
-            && entity.x < target.x + sumR
-            && entity.y + sumR > target.y
-            && entity.y < target.y + sumR) {
 
-            var dX = target.x - entity.x;
-            var dY = target.y - entity.y;
+          var dX = target.x - entity.x;
+          var dY = target.y - entity.y;
 
-            var dC = Math.pow(dX, 2) + Math.pow(dY, 2);
-            var sumR = Math.pow(entity.radius + target.radius, 2);
+          var dC = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
 
-            if (dC < sumR) {
-              console.log('col', keys[i], keys[j]);              
-              if (entity.team != target.team) {
-                yield put({ type: 'ENTITY_UPDATE', name: keys[i], payload: { health: entity.health - 1 } });
-                yield put({ type: 'ENTITY_UPDATE', name: keys[j], payload: { health: target.health - 1 } });
-              }
-            }
-          }
-
+          distances[entityKey] = (distances[entityKey] || {});
+          distances[entityKey][targetKey] = dC - sumR;
+          distances[targetKey] = (distances[targetKey] || {});
+          distances[targetKey][entityKey] = dC - sumR;
         }
       }
+
+      yield put({ type: 'COLLISIONS', payload: distances });
     }
   }
 }
