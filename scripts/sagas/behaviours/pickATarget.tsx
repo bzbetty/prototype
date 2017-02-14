@@ -7,7 +7,7 @@ export default function* pickATarget(entityName, entity) {
         var entities = yield select(s => s.entities);
         for(var i in entities)
         {
-            if(i != entityName)
+            if(i != entityName && entities[i].team != entity.team && entity.collisions && entity.collisions[i] < 90)
             {
                 yield put({ type: 'ENTITY_UPDATE', name: entityName, payload: { target: i }});
             }

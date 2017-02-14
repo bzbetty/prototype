@@ -42,6 +42,7 @@ export default function* level1() {
     team: 0,
     spawn: 30,
     radius: 20,
+    rotation: 0,
     health: 100,
     behaviours: [
       moveTowardsTarget,
@@ -62,6 +63,7 @@ export default function* level1() {
       x: 200,
       y: 200,
       radius: 50,
+      rotation: 180,
       team: 1,
       health: 100,
       behaviours: [
