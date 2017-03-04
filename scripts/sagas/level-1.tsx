@@ -12,6 +12,7 @@ import collisionDetection from './collisionDetection.tsx';
 import pickATarget from './behaviours/pickATarget.tsx';
 import moveTowardsTarget from './behaviours/moveTowardsTarget.tsx';
 import hurtEnemiesInRange from './behaviours/hurtEnemiesInRange.tsx';
+import playback from './behaviours/playback.tsx';
 
 
 //level ideas
@@ -36,18 +37,21 @@ import hurtEnemiesInRange from './behaviours/hurtEnemiesInRange.tsx';
 export default function* level1() {
   let recording: Array<Action> = [];
 
-  let playerDefaults = {
-    x: 200,
-    y: 400,
-    team: 0,
-    spawn: 30,
-    radius: 20,
-    rotation: 0,
-    health: 100,
-    behaviours: [
-      moveTowardsTarget,
-      hurtEnemiesInRange
-    ]
+  let playerDefaults = function() {
+      return {
+        x: 200,
+        y: 400,
+        team: 0,
+        spawn: 30,
+        radius: 20,
+        rotation: 0,
+        health: 100,
+        behaviours: [
+          playback(recording),
+          moveTowardsTarget,
+          hurtEnemiesInRange
+        ]
+    }
   };
 
   yield fork(recorder, recording);
