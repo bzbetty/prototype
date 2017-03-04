@@ -7,9 +7,9 @@ class HealthBar extends React.Component {
         var health = this.props.health;
         var size = this.props.size;
 
-        if(health == 100)
+        if(health == 100 || !health)
             return null;
-        
+
         return (
             <div style={{
                 position: 'absolute',

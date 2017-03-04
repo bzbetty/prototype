@@ -64,9 +64,7 @@ export default function* level1() {
         x: 200,
         y: 400,
         team: 0,
-        radius: 2,
-        rotation: 0,
-        health: 100,
+        radius: 2,        
         behaviour: cooldown(10, spawn(playerDefaults)),                  
     }
   };
