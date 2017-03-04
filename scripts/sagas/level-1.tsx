@@ -60,8 +60,8 @@ export default function* level1() {
         behaviour: every([
           playback(recording),
           moveTowardsTarget,
-          atHealth(0, die),
-          keyDown('1', cooldown(1, hurtEnemiesInRange(10)))
+          atHealth(0, die('LOSE')),
+          keyDown('1', cooldown(1, hurtEnemiesInRange(40)))
         ])
     }
   };
@@ -92,12 +92,10 @@ export default function* level1() {
       behaviour: every([
         pickATarget,
         moveTowardsTarget,
-        atHealth(0, die),
+        atHealth(0, die('WIN')),
         cooldown(1, hurtEnemiesInRange(5)),
       ])
     }
   });
-
-  //take('WIN'); // wait for win condition?
 }
 
