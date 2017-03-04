@@ -11,7 +11,16 @@ export default function* actionRecorder(recording: Array<Action>) {
     recording.push({ ...event, timestamp: timestamp });
   };
 
-  window.addEventListener('keypress', e => emitter({ type: 'KEYPRESS', payload: { key: e.key } }));
+  window.addEventListener('keydown', e => {
+    if (!e.repeat) {
+      return emitter({ type: 'KEYDOWN', payload: { key: e.key } });
+    } else {
+      emitter({ type: 'KEYREPEAT', payload: { key: e.key } })
+    }
+  });
+
+  window.addEventListener('keyup', e => emitter({ type: 'KEYUP', payload: { key: e.key } }));
+
   window.addEventListener('click', e => emitter({ type: 'CLICK', payload: { x: e.clientX, y: e.clientY, button: e.which } }));
 
   while (true) {

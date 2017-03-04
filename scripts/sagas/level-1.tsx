@@ -13,6 +13,7 @@ import moveTowardsTarget from './behaviours/moveTowardsTarget.tsx';
 import hurtEnemiesInRange from './behaviours/hurtEnemiesInRange.tsx';
 import playback from './behaviours/playback.tsx';
 import cooldown from './behaviours/cooldown.tsx';
+import keyDown from './behaviours/keyDown.tsx'
 import spawn from './behaviours/spawn.tsx';
 
 import every from './behaviours/util/every.tsx';
@@ -54,7 +55,7 @@ export default function* level1() {
         behaviour: every([
           playback(recording),
           moveTowardsTarget,
-          cooldown(1, hurtEnemiesInRange)
+          keyDown('1', cooldown(1, hurtEnemiesInRange))
         ])
     }
   };
