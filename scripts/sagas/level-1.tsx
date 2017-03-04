@@ -55,7 +55,7 @@ export default function* level1() {
         behaviour: every([
           playback(recording),
           moveTowardsTarget,
-          keyDown('1', cooldown(1, hurtEnemiesInRange))
+          keyDown('1', cooldown(1, hurtEnemiesInRange(10)))
         ])
     }
   };
@@ -86,7 +86,7 @@ export default function* level1() {
       behaviour: every([
         pickATarget,
         moveTowardsTarget,
-        cooldown(1, hurtEnemiesInRange)
+        cooldown(1, hurtEnemiesInRange(5))
       ])
     }
   });
