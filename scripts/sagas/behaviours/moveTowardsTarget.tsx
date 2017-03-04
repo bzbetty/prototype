@@ -26,7 +26,7 @@ export default function* moveTowardsTarget(entityName, entity, delta) {
             dY /= dC;
 
             //proportion of max velocity
-            var velocityX = dX * 0.2 * delta * (20 / entity.radius); 
+            var velocityX = dX * 0.2 * delta * (20 / entity.radius);
             var velocityY = dY * 0.2 * delta * (20 / entity.radius);
 
             update.x = Math.round(entity.x + velocityX);
@@ -34,7 +34,9 @@ export default function* moveTowardsTarget(entityName, entity, delta) {
 
         }
 
-        yield put({ type: 'ENTITY_UPDATE', name: entityName, payload: update });
+        if(update.x || update.y || update.rotation != entity.rotation) {
+            yield put({ type: 'ENTITY_UPDATE', name: entityName, payload: update });
+        }
 
     }
 }
