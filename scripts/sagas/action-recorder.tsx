@@ -7,8 +7,11 @@ export default function* actionRecorder(recording: Array<Action>) {
   let timestamp: number = 0;
   let chan = yield call(gameLoop);
 
-  var emitter = function (event) {
-    recording.push({ ...event, timestamp: timestamp });
+  var event = yield take(chan, 'GAMELOOP_TICK');
+  let initialTimestamp : number = event.payload.timestamp;
+
+  let emitter = function (event) {
+    recording.push({ ...event, timestamp: timestamp - initialTimestamp });  
   };
 
   window.addEventListener('keydown', e => {
