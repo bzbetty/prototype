@@ -2,6 +2,9 @@
 
 export default function entitiesReducer(state = {}, action) {
     switch (action.type) {
+        case 'CLEAR':
+            return {};
+
         case 'SPAWN':
             var newState = { ...state };
             newState[action.name] = { ...action.payload };
