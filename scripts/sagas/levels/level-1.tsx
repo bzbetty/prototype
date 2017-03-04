@@ -1,3 +1,5 @@
+import React, { Component, PropTypes } from 'react';
+
 import { delay, takeEvery, takeLatest, eventChannel, END, channel, buffers } from 'redux-saga'
 import { race, fork, take, call, put, select } from 'redux-saga/effects'
 
@@ -22,6 +24,8 @@ import atHealth from '../behaviours/conditionals/atHealth.tsx'
 
 
 import every from '../behaviours/util/every.tsx';
+
+
 
 
 //level ideas
@@ -49,39 +53,43 @@ import every from '../behaviours/util/every.tsx';
 
 
 export default function* level1() {
+  yield put({ type: 'SHOW_DIALOG', payload: <div>welcome to prototype, click to move, push 1 to hit nearby enemies</div> });
+  yield take('DISMISS_DIALOG');
+
+
   let recording: Array<Action> = [];
   yield fork(recorder, recording);
   yield fork(entityBehaviour);
   yield fork(collisionDetection);
 
-  let playerDefaults = function() {
-      return {
-        x: 200,
-        y: 400,
-        team: 0,
-        radius: 20,
-        rotation: 0,
-        health: 100,
-        behaviour: every([
-          playback(recording),
-          moveTowardsTarget,
-          atHealth(0, die('LOSE')),
-          keyDown('1', cooldown(1, hurtEnemiesInRange(40)))
-        ])
+  let playerDefaults = function () {
+    return {
+      x: 200,
+      y: 400,
+      team: 0,
+      radius: 20,
+      rotation: 0,
+      health: 100,
+      behaviour: every([
+        playback(recording),
+        moveTowardsTarget,
+        atHealth(0, die('LOSE')),
+        keyDown('1', cooldown(1, hurtEnemiesInRange(40)))
+      ])
     }
   };
 
-   let spawner = function() {
-      return {
-        x: 200,
-        y: 400,
-        team: 0,
-        radius: 2,        
-        behaviour: cooldown(10, spawn(playerDefaults)),                  
+  let spawner = function () {
+    return {
+      x: 200,
+      y: 400,
+      team: 0,
+      radius: 2,
+      behaviour: cooldown(10, spawn(playerDefaults)),
     }
   };
 
-   yield put({ type: 'SPAWN', payload: spawner(), name: 'spawner' });
+  yield put({ type: 'SPAWN', payload: spawner(), name: 'spawner' });
 
   //spawn mobs
   yield put({
