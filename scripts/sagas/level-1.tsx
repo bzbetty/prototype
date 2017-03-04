@@ -15,6 +15,8 @@ import playback from './behaviours/playback.tsx';
 import cooldown from './behaviours/cooldown.tsx';
 import spawn from './behaviours/spawn.tsx';
 
+import every from './behaviours/util/every.tsx';
+
 
 //level ideas
 //hit until dead
@@ -49,11 +51,11 @@ export default function* level1() {
         radius: 20,
         rotation: 0,
         health: 100,
-        behaviours: [
+        behaviour: every([
           playback(recording),
           moveTowardsTarget,
           cooldown(1, hurtEnemiesInRange)
-        ]
+        ])
     }
   };
 
@@ -65,15 +67,11 @@ export default function* level1() {
         radius: 2,
         rotation: 0,
         health: 100,
-        behaviours: [
-          cooldown(10, spawn(playerDefaults)),          
-        ]
+        behaviour: cooldown(10, spawn(playerDefaults)),                  
     }
   };
 
    yield put({ type: 'SPAWN', payload: spawner(), name: 'spawner' });
-
-  
 
   //spawn mobs
   yield put({
@@ -86,11 +84,11 @@ export default function* level1() {
       rotation: 180,
       team: 1,
       health: 100,
-      behaviours: [
+      behaviour: every([
         pickATarget,
         moveTowardsTarget,
         cooldown(1, hurtEnemiesInRange)
-      ]
+      ])
     }
   });
 

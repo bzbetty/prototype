@@ -15,9 +15,7 @@ export default function* behaviours() {
       if (!entity)
         return;
 
-      for (var b = 0; b < entity.behaviours.length; b++) {
-        yield fork(entity.behaviours[b], spawnMessage.name, entity, action.payload.timestep, action.payload.timestamp);
-      }
+      yield* entity.behaviour(spawnMessage.name, entity, action.payload.timestep, action.payload.timestamp);
 
     }
   });
