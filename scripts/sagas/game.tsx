@@ -1,4 +1,4 @@
-import level1 from './level-1.tsx';
+import level1 from './levels/level-1.tsx';
 import fps from './fps.tsx';
 import { delay, takeEvery, takeLatest, eventChannel, END } from 'redux-saga'
 import { race, fork, take, call, put, select, cancel } from 'redux-saga/effects'

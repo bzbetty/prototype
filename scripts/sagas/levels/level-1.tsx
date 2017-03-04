@@ -1,34 +1,34 @@
 import { delay, takeEvery, takeLatest, eventChannel, END, channel, buffers } from 'redux-saga'
 import { race, fork, take, call, put, select } from 'redux-saga/effects'
 
-import mapObject from '../utils/map-object.tsx';
-import Action from '../utils/action.tsx'
+import mapObject from '../../utils/map-object.tsx';
+import Action from '../../utils/action.tsx'
 
-import recorder from './action-recorder.tsx';
-import behaviours from './behaviours.tsx';
-import collisionDetection from './collisionDetection.tsx';
+import recorder from '../actionRecorder.tsx';
+import entityBehaviour from '../entityBehaviour.tsx';
+import collisionDetection from '../collisionDetection.tsx';
 
-import pickATarget from './behaviours/pickATarget.tsx';
-import moveTowardsTarget from './behaviours/moveTowardsTarget.tsx';
-import hurtEnemiesInRange from './behaviours/hurtEnemiesInRange.tsx';
-import playback from './behaviours/playback.tsx';
-import spawn from './behaviours/spawn.tsx';
-import die from './behaviours/die.tsx';
-
-
-import cooldown from './behaviours/conditionals/cooldown.tsx';
-import keyDown from './behaviours/conditionals/keyDown.tsx'
-import atHealth from './behaviours/conditionals/atHealth.tsx'
+import pickATarget from '../behaviours/pickATarget.tsx';
+import moveTowardsTarget from '../behaviours/moveTowardsTarget.tsx';
+import hurtEnemiesInRange from '../behaviours/hurtEnemiesInRange.tsx';
+import playback from '../behaviours/playback.tsx';
+import spawn from '../behaviours/spawn.tsx';
+import die from '../behaviours/die.tsx';
 
 
-import every from './behaviours/util/every.tsx';
+import cooldown from '../behaviours/conditionals/cooldown.tsx';
+import keyDown from '../behaviours/conditionals/keyDown.tsx'
+import atHealth from '../behaviours/conditionals/atHealth.tsx'
+
+
+import every from '../behaviours/util/every.tsx';
 
 
 //level ideas
 //hit until dead
 //heal self
+//heal future self / require heal empty space
 //taunt
-//require heal empty space
 //fire - require move boss
 //drag through fire
 //spawn mobs
@@ -36,17 +36,22 @@ import every from './behaviours/util/every.tsx';
 //spawner has health?
 //spawner is a behavior?
 //projectile
-//get over here
+//get over here /  knockback
 //ranged mob
 //silence/interrupts
 //switch main
 //delay input
+//mob spawner
+//control mob
+//casting bar?
+//linked health
+
 
 
 export default function* level1() {
   let recording: Array<Action> = [];
   yield fork(recorder, recording);
-  yield fork(behaviours);
+  yield fork(entityBehaviour);
   yield fork(collisionDetection);
 
   let playerDefaults = function() {

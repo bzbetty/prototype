@@ -9,7 +9,7 @@ import Game from './game.tsx';
 
 //lots of code/inspiration taken from
 //https://github.com/FormidableLabs/react-game-kit
-//https://www.isaacsukin.com/news/2015/01/detailed-explanation-javascript-game-loops-and-timing
+//https://www.isaacsukin.com/news/2015/01/detailed-explanation-javascript-gameLoopEventChannel.s-and-timing
 
 render(
   <Provider store={Store}>
