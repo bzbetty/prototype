@@ -16,9 +16,9 @@ import spawn from './behaviours/spawn.tsx';
 import die from './behaviours/die.tsx';
 
 
-import cooldown from './behaviours/cooldown.tsx';
-import keyDown from './behaviours/keyDown.tsx'
-import atHealth from './behaviours/atHealth.tsx'
+import cooldown from './behaviours/conditionals/cooldown.tsx';
+import keyDown from './behaviours/conditionals/keyDown.tsx'
+import atHealth from './behaviours/conditionals/atHealth.tsx'
 
 
 import every from './behaviours/util/every.tsx';
