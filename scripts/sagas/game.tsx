@@ -8,11 +8,21 @@ var levels = [level1];
 
 export default function* game() {
   yield fork(fps);
-  while (true) {
+  for (var levelIndex = 0; levelIndex < levels.length; levelIndex++) {
     yield put({ type: 'CLEAR' });
-    var level = yield fork(level1);
-    yield take(['WIN', 'LOSE']);
+    var level = yield fork(levels[levelIndex]);
+
+    var result = yield take(['WIN', 'LOSE']);
     yield cancel(level);
+
+    if (result.type == 'LOSE') {
+      levelIndex = -1;
+    }
+
   }
+
+  yield put({ type: 'CLEAR' });
+  //todo win message
+
 }
 
