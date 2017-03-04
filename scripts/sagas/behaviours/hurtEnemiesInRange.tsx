@@ -10,7 +10,7 @@ export default function hurtEnemiesInRange(damage = 10, range = 10) {
             for (var key in entity.collisions) {
                 var distance = entity.collisions[key];
                 if (entity.team != entities[key].team && distance < range) {
-                    yield put({ type: 'ENTITY_UPDATE', name: key, payload: { health: entities[key].health - damage } });
+                    yield put({ type: 'ENTITY_UPDATE', name: key, payload: { health: Math.max(0, entities[key].health - damage) } });
                 }
             }
         }

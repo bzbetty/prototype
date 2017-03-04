@@ -12,9 +12,14 @@ import pickATarget from './behaviours/pickATarget.tsx';
 import moveTowardsTarget from './behaviours/moveTowardsTarget.tsx';
 import hurtEnemiesInRange from './behaviours/hurtEnemiesInRange.tsx';
 import playback from './behaviours/playback.tsx';
+import spawn from './behaviours/spawn.tsx';
+import die from './behaviours/die.tsx';
+
+
 import cooldown from './behaviours/cooldown.tsx';
 import keyDown from './behaviours/keyDown.tsx'
-import spawn from './behaviours/spawn.tsx';
+import atHealth from './behaviours/atHealth.tsx'
+
 
 import every from './behaviours/util/every.tsx';
 
@@ -55,6 +60,7 @@ export default function* level1() {
         behaviour: every([
           playback(recording),
           moveTowardsTarget,
+          atHealth(0, die),
           keyDown('1', cooldown(1, hurtEnemiesInRange(10)))
         ])
     }
@@ -86,7 +92,8 @@ export default function* level1() {
       behaviour: every([
         pickATarget,
         moveTowardsTarget,
-        cooldown(1, hurtEnemiesInRange(5))
+        atHealth(0, die),
+        cooldown(1, hurtEnemiesInRange(5)),
       ])
     }
   });

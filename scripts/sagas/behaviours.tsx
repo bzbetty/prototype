@@ -8,7 +8,7 @@ export default function* behaviours() {
 
     while (true) {
       var action = yield take(chan, 'GAMELOOP_UPDATE');
-
+      
       var entities = yield select(store => store.entities);
       var entity = entities[spawnMessage.name];
 

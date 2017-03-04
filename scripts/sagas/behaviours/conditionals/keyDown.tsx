@@ -4,12 +4,12 @@ import { race, fork, take, call, put, select } from 'redux-saga/effects'
 export default function kwyDown(key: string, behaviour) {
     let initialTimestamp: number = 0;
 
-    return function* (entityName, entity, timestemp, timestamp) {
+    return function* (entityName, entity, timestep, timestamp) {
         if (entity.keyDown != key) {
             return;                        
         }
 
-        yield* behaviour(entityName, entity, timestemp, timestamp);        
+        yield* behaviour(entityName, entity, timestep, timestamp);        
     };
     
 }
