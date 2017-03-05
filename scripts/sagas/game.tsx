@@ -26,7 +26,8 @@ export default function* game() {
   }
 
   yield put({ type: 'CLEAR' });
-  //todo win message
+  yield put({ type: 'SHOW_DIALOG', payload: <div>such winner</div> });
+  yield take('DISMISS_DIALOG');
 
 }
 
