@@ -53,7 +53,7 @@ import every from '../behaviours/util/every.tsx';
 
 
 export default function* level1() {
-  yield put({ type: 'SHOW_DIALOG', payload: <div>welcome to prototype, click to move, push 1 to hit nearby enemies, 2 to heal</div> });
+  yield put({ type: 'SHOW_DIALOG', payload: <div>click to move, push 1 to hit nearby enemies, 2 to drop aoe heal</div> });
   yield take('DISMISS_DIALOG');
 
 
