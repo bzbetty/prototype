@@ -7,7 +7,7 @@ class HealthBar extends React.Component {
         var health : number = Math.max(0, this.props.health);
         var size = this.props.size;
 
-        if(health == 100 || !health)
+        if(!health)
             return null;
 
         return (

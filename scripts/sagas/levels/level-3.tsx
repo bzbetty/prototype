@@ -13,6 +13,8 @@ import collisionDetection from '../collisionDetection.tsx';
 import pickATarget from '../behaviours/pickATarget.tsx';
 import moveTowardsTarget from '../behaviours/moveTowardsTarget.tsx';
 import hurtEnemiesInRange from '../behaviours/hurtEnemiesInRange.tsx';
+import healInRange from '../behaviours/healInRange.tsx';
+import heal from '../behaviours/heal.tsx';
 import playback from '../behaviours/playback.tsx';
 import spawn from '../behaviours/spawn.tsx';
 import die from '../behaviours/die.tsx';
@@ -25,8 +27,33 @@ import atHealth from '../behaviours/conditionals/atHealth.tsx'
 
 import every from '../behaviours/util/every.tsx';
 
+
+
+
+//level ideas
+//heal future self / require heal empty space
+//taunt
+//fire - require move boss
+//drag through fire
+//spawn mobs
+//spawner different locations
+//spawner has health?
+//spawner is a behavior?
+//projectile
+//get over here /  knockback
+//ranged mob
+//silence/interrupts
+//switch main
+//delay input
+//mob spawner
+//control mob
+//casting bar?
+//linked health
+
+
+
 export default function* level1() {
-  yield put({ type: 'SHOW_DIALOG', payload: <div>welcome to prototype, click to move, push 1 to hit nearby enemies</div> });
+  yield put({ type: 'SHOW_DIALOG', payload: <div>welcome to prototype, click to move, push 1 to hit nearby enemies, 2 to heal</div> });
   yield take('DISMISS_DIALOG');
 
 
@@ -34,6 +61,18 @@ export default function* level1() {
   yield fork(recorder, recording);
   yield fork(entityBehaviour);
   yield fork(collisionDetection);
+
+  let healer = function () {
+    return {
+      x: 200,
+      y: 400,
+      team: 0,
+      radius: 20,
+      behaviour: every([
+        cooldown(3, healInRange(40))
+      ])
+    };
+  };
 
   let playerDefaults = function () {
     return {
@@ -47,13 +86,13 @@ export default function* level1() {
         playback(recording),
         moveTowardsTarget,
         atHealth(0, die('LOSE')),
-        keyDown('1', cooldown(1, hurtEnemiesInRange(40)))
+        keyDown('1', cooldown(1, hurtEnemiesInRange(10))),
+        keyDown('2', cooldown(1000, spawn(healer)))
       ])
     }
   };
 
-  
-  yield put({ type: 'SPAWN', payload: playerDefaults(), name: 'player' });
+  yield put({ type: 'SPAWN', payload: playerDefaults(), name: 'spawner' });
 
   //spawn mobs
   yield put({
@@ -67,7 +106,10 @@ export default function* level1() {
       team: 1,
       health: 100,
       behaviour: every([
-        atHealth(0, die('WIN'))
+        pickATarget,
+        moveTowardsTarget,
+        atHealth(0, die('WIN')),
+        cooldown(1, hurtEnemiesInRange(20)),
       ])
     }
   });
